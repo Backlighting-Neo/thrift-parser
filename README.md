@@ -1,3 +1,23 @@
+# 与原版的不同支持
+
+支持解析```Enum中Member```与```Struct中Field```的行内后缀注释，原版中会将此类注释归并到下一个AST节点中。
+
+例如在下面的例子中，原版会将SomeStruct中的"Some Comment"归在SomeEnum的comments中，将SomeEnum中的"Some Comment"归在SomeService中。而此版本会将他们归在正确的StructField与EnumMember中。
+
+```
+struct SomeStruct {
+  1: required string text;  // Some Comment
+}
+
+enum SomeEnum {
+  A = 1;  // Some Comment
+}
+
+service SomeService {
+  void someMethod()
+}
+```
+
 # TypeScript Thrift Parser
 
 A parser for Thrift written in TypeScript. The resulting AST can be used to codegen JavaScript from a Thrift file, or just to inspect the Thrift structure.
