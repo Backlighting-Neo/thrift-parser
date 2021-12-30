@@ -598,8 +598,6 @@ export function createParser(
             } else {
                 members.push(parseEnumMember())
 
-                // consume list separator if there is one
-                readListSeparator()
                 if (isStatementBeginning(currentToken())) {
                     throw reportError(
                         `Closing curly brace expected, but new statement found`,
@@ -641,6 +639,10 @@ export function createParser(
         }
 
         const annotations: Annotations | undefined = parseAnnotations()
+
+        readListSeparator()
+
+        consumeTrailingCommentLine(loc)
 
         return {
             type: SyntaxType.EnumMember,
@@ -794,6 +796,8 @@ export function createParser(
             startLoc.start,
             endLoc.end,
         )
+
+        consumeTrailingCommentLine(location)
 
         return {
             type: SyntaxType.FieldDefinition,
@@ -1200,6 +1204,16 @@ export function createParser(
                 default:
                     return
             }
+        }
+    }
+
+    function consumeTrailingCommentLine(currentLocation: TextLocation): void {
+        const token = tokens[currentIndex]
+        if (
+            token.type === SyntaxType.CommentLine &&
+            token.loc.start.line === currentLocation.end.line
+        ) {
+            consumeComments()
         }
     }
 
