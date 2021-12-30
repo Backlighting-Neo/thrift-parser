@@ -1,5 +1,5 @@
 {
-  "name": "@creditkarma/thrift-parser",
+  "name": "@mtfe/ck-thrift-parser",
   "version": "1.2.0",
   "description": "A parser for Thrift written in TypeScript",
   "main": "./dist/main/index.js",
