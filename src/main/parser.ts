@@ -797,7 +797,9 @@ export function createParser(
             endLoc.end,
         )
 
-        consumeTrailingCommentLine(location)
+        if (comments.length === 0) {
+            consumeTrailingCommentLine(location)
+        }
 
         return {
             type: SyntaxType.FieldDefinition,

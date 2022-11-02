@@ -18,6 +18,11 @@ service SomeService {
 }
 ```
 
+## Changelog
+
+2022年11月02日
+- 若一个节点已获得一个LeadingComment，则接下来的TrailingComment则不归其所有
+
 # TypeScript Thrift Parser
 
 A parser for Thrift written in TypeScript. The resulting AST can be used to codegen JavaScript from a Thrift file, or just to inspect the Thrift structure.
