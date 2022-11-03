@@ -97,6 +97,7 @@ export function createParser(
     tokens: Array<Token>,
     report: ErrorReporter = noopReporter,
 ): Parser {
+    let shouldConsumeComment: boolean = true
     let comments: Array<Comment> = []
     let currentIndex: number = 0
 
@@ -642,7 +643,9 @@ export function createParser(
 
         readListSeparator()
 
-        consumeTrailingCommentLine(loc)
+        if (comments.length === 0) {
+            consumeTrailingCommentLine(loc)
+        }
 
         return {
             type: SyntaxType.EnumMember,
@@ -781,6 +784,7 @@ export function createParser(
             `Unable to find identifier for field`,
         )
 
+        shouldConsumeComment = false
         const defaultValue: ConstValue | null = parseValueAssignment()
         const annotations: Annotations | undefined = parseAnnotations()
         const listSeparator: Token | null = readListSeparator()
@@ -797,6 +801,7 @@ export function createParser(
             endLoc.end,
         )
 
+        shouldConsumeComment = true
         if (comments.length === 0) {
             consumeTrailingCommentLine(location)
         }
@@ -1182,6 +1187,10 @@ export function createParser(
     }
 
     function consumeComments(): void {
+        if (!shouldConsumeComment) {
+            return
+        }
+
         while (true) {
             const next: Token = tokens[currentIndex]
             switch (next.type) {
